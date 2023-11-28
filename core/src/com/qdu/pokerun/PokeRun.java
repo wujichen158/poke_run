@@ -7,10 +7,14 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.qdu.pokerun.api.EmptyStepCounter;
+import com.qdu.pokerun.api.StepCounter;
 import com.qdu.pokerun.entity.Player;
 import com.qdu.pokerun.preference.PokeRunPreference;
 import com.qdu.pokerun.screen.LoginScreen;
 import com.qdu.pokerun.screen.MainScreen;
+
+import java.util.Optional;
 
 public class PokeRun extends Game {
     public SpriteBatch batch;
@@ -28,6 +32,22 @@ public class PokeRun extends Game {
 
     public static I18NBundle rb_default;
 
+    private StepCounter globalStepCounter;
+
+    /**
+     * 初始化所有字段
+     * @param stepCounter
+     */
+    public PokeRun(StepCounter stepCounter) {
+        this();
+        this.globalStepCounter = stepCounter;
+    }
+
+    public PokeRun() {
+        super();
+        instance = this;
+    }
+
     /**
      * 初始化国际化文本
      */
@@ -43,13 +63,22 @@ public class PokeRun extends Game {
         return instance;
     }
 
+    public StepCounter getGlobalStepCounter() {
+        return this.globalStepCounter;
+    }
+
+    /**
+     * 创建游戏资源或设置游戏状态
+     */
     @Override
     public void create() {
+//		player = new Player("muyoo", "1169083089@qq.com");
+        if (!Optional.ofNullable(globalStepCounter).isPresent()) {
+            globalStepCounter = new EmptyStepCounter();
+        }
 
         initI18NMessage();
         prefs = new PokeRunPreference();
-
-//		player = new Player("muyoo", "1169083089@qq.com");
 
         titleMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/vs_marine.mp3"));
         titleMusic.setVolume(prefs.getMusicVolume());
@@ -60,7 +89,6 @@ public class PokeRun extends Game {
         pokemonClickSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pokemon_click.mp3"));
         toolClickSound = Gdx.audio.newSound(Gdx.files.internal("sounds/expand_box.mp3"));
 
-        instance = this;
         batch = new SpriteBatch();
         this.setScreen(new LoginScreen());
     }

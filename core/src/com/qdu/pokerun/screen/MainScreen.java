@@ -1,14 +1,9 @@
 package com.qdu.pokerun.screen;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -29,18 +24,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.qdu.pokerun.EffectMgr;
 import com.qdu.pokerun.PokeRun;
-import com.qdu.pokerun.actor.tool.ToolElementList;
-import com.qdu.pokerun.actor.tool.CleanTool;
-import com.qdu.pokerun.actor.tool.element.DragToolElement;
-import com.qdu.pokerun.actor.tool.FeedTool;
 import com.qdu.pokerun.actor.PokemonBarElement;
-import com.qdu.pokerun.actor.PokemonMain;
 import com.qdu.pokerun.actor.PokemonBarSprite;
+import com.qdu.pokerun.actor.PokemonMain;
+import com.qdu.pokerun.actor.tool.CleanTool;
+import com.qdu.pokerun.actor.tool.FeedTool;
+import com.qdu.pokerun.actor.tool.ToolElementList;
+import com.qdu.pokerun.actor.tool.element.DragToolElement;
 import com.qdu.pokerun.entity.Background;
 import com.qdu.pokerun.entity.Pokemon;
 import com.qdu.pokerun.lib.LibMisc;
@@ -54,14 +47,9 @@ import com.qdu.pokerun.util.viewport.FitScreenViewport;
 import com.ray3k.stripe.PopTable;
 import com.ray3k.stripe.PopTableClickListener;
 
-import java.util.Locale;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import javax.swing.GrayFilter;
-
-import com.qdu.pokerun.EffectMgr;
 
 public class MainScreen implements Screen {
 
@@ -128,6 +116,8 @@ public class MainScreen implements Screen {
     private Label expLabel;
     private ProgressBar friendshipBar;
     private ProgressBar expBar;
+    private Label stepLabel;
+    private Label stepTitleLabel;
 
     //中间整个表格
     private Table centerTable;
@@ -213,6 +203,8 @@ public class MainScreen implements Screen {
         pokemon1st.setSelected(true);
         pokemonMain.getActor().setDrawable(pokemon1st.getDrawable());
         updateBars(0);
+
+
 
 //        this.pokemonSpritesGroup.fill(80f/64f);
     }
@@ -365,6 +357,7 @@ public class MainScreen implements Screen {
         this.levelLabel = new Label("0", skin);
         this.friendshipBar = new ProgressBar(0, 255, 1, false, skin);
         this.expBar = new ProgressBar(0, 10000, 1, false, skin);
+        this.stepLabel = new Label("" + PokeRun.getInstance().getGlobalStepCounter().getSteps(), skin);
         initBarResources();
 
         this.pokemonSpritesGroup = new VerticalGroup().space(gapY);
@@ -434,6 +427,10 @@ public class MainScreen implements Screen {
         this.barTable.add(this.expLabel);
         this.barTable.add(this.expBar);
         EffectMgr.effectMgr.register("exp", this.expBar);
+        this.barTable.row();
+        this.stepTitleLabel = new Label(PokeRun.rb_default.format("label.step"), skin);
+        this.barTable.add(this.stepTitleLabel);
+        this.barTable.add(this.stepLabel);
         this.centerTable.add(this.barTable);
 
         this.mainTable.add(this.centerTable).minSize(LibPokemonDetails.POKEMON_MAIN_W, LibPokemonDetails.POKEMON_MAIN_H).expandX();
@@ -457,6 +454,7 @@ public class MainScreen implements Screen {
         this.levelTitleLabel.setText(PokeRun.rb_default.format("label.level"));
         this.friendshipLabel.setText(PokeRun.rb_default.format("label.friendship"));
         this.expLabel.setText(PokeRun.rb_default.format("label.exp"));
+        this.stepTitleLabel.setText(PokeRun.rb_default.format("label.step"));
         this.settingButton.setText(PokeRun.rb_default.format("button.setting"));
         this.tradeButton.setText(PokeRun.rb_default.format("button.trade"));
         this.buffButton.setText(PokeRun.rb_default.format("button.buff"));
@@ -469,6 +467,7 @@ public class MainScreen implements Screen {
         //根据场景切换背景填充色
         ScreenUtils.clear(this.bgMain.getBgColor());
 
+        this.stepLabel.setText(PokeRun.getInstance().getGlobalStepCounter().getSteps());
         this.mainStage.act(Gdx.graphics.getDeltaTime());
 
 //        this.game.batch.setProjectionMatrix(mainStage.getCamera().combined);
@@ -482,7 +481,7 @@ public class MainScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         Stream.concat(Arrays.stream(ToolElementList.FeedToolList),
-                Arrays.stream(ToolElementList.CleanToolList))
+                        Arrays.stream(ToolElementList.CleanToolList))
                 .map(DragToolElement::getDraggableTexture)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -490,7 +489,7 @@ public class MainScreen implements Screen {
                     Vector3 v = new Vector3();
                     v.set(point.first, point.second, 0);
                     camera.unproject(v);
-                    return new Pair<>(Float.valueOf(v.x), Float.valueOf(v.y));
+                    return new Pair<>(v.x, v.y);
                 }))
                 .forEach(pair -> {
                     //System.out.println(pair.second.first + " " + pair.second.second);

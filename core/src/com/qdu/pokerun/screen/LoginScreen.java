@@ -33,6 +33,7 @@ import com.qdu.pokerun.PokeRun;
 import com.qdu.pokerun.entity.Player;
 import com.qdu.pokerun.lib.LibMisc;
 import com.qdu.pokerun.util.NetUtil;
+import com.qdu.pokerun.util.PlayerUtil;
 import com.qdu.pokerun.util.SoundUtil;
 import com.qdu.pokerun.util.viewport.FitScreenViewport;
 
@@ -154,7 +155,21 @@ public class LoginScreen implements Screen {
                     return;
                 }
                 //Http request
-                login(playerNameTF.getText(), pwdTF.getText());
+//                login(playerNameTF.getText(), pwdTF.getText());
+                Player player = PlayerUtil.checkPlayerInfo(playerNameTF.getText(), pwdTF.getText());
+                if (!player.getPlayerName().equals("")) {
+                    PokeRun.player = player;
+                    PokeRun.getInstance().setScreen(new MainScreen());
+                    SoundUtil.ensureMusicPlaying();
+                    dispose();
+                } else {
+                    new Dialog(PokeRun.rb_default.format("dialog.wronginfo.title"), skin)
+                            .text(PokeRun.rb_default.format("dialog.wronginfo"))
+                            .button(PokeRun.rb_default.format("dialog.confirm"), true)
+                            .key(Input.Keys.ENTER, true)
+                            .key(Input.Keys.ESCAPE, true)
+                            .show(mainStage);
+                }
             }
         });
 

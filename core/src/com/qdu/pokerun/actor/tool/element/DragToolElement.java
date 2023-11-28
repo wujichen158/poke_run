@@ -31,7 +31,7 @@ public abstract class DragToolElement extends FunctionalTool {
         }
         return Optional.of(
                 (projectionFunc) -> {
-                    Pair<Float, Float> point = projectionFunc.apply(new Pair(Float.valueOf(dragX), Float.valueOf(dragY)));
+                    Pair<Float, Float> point = projectionFunc.apply(new Pair<>(dragX, dragY));
                     return new Pair<>(dragTexture,
                             new Pair<>(point.first - dragTexture.getHeight() / 2
                                     , point.second - dragTexture.getWidth() / 2));
