@@ -1,6 +1,11 @@
 package com.qdu.pokerun;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -13,7 +18,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class AndroidLauncher extends AndroidApplication {
+public class AndroidLauncher extends AndroidApplication implements SensorEventListener {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 
@@ -24,10 +29,19 @@ public class AndroidLauncher extends AndroidApplication {
 //		StrictMode.VmPolicy old = StrictMode.getVmPolicy();
 		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
 		super.onCreate(savedInstanceState);
+		requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+//		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
+//				!= PackageManager.PERMISSION_GRANTED) {
+//			Activit.requestPermissions(this, new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, REQUEST_CODE);
+//		}
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		config.useAccelerometer=false;
-		config.useCompass=false;
-		initialize(new PokeRun(), config);
+//		config.useAccelerometer=true;
+//		config.useCompass=true;
+		System.out.println("Start service!!!!!");
+//		startForegroundService(new Intent(this, AndroidStepService.class));
+		startService(new Intent(this, AndroidStepService.class));
+		System.out.println("Start init!!!!!");
+		initialize(new PokeRun(new AndroidStepCounter()), config);
 	}
 
 	private boolean isNetworkConnected() {
@@ -48,5 +62,14 @@ public class AndroidLauncher extends AndroidApplication {
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
 	}
 }

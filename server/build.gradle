@@ -7,8 +7,9 @@ project.ext.assetsDir = new File("../assets")
 
 import org.gradle.internal.os.OperatingSystem
 
-task run(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
+tasks.register('run', JavaExec) {
+    dependsOn classes
+    mainClass = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
@@ -20,8 +21,9 @@ task run(dependsOn: classes, type: JavaExec) {
     }
 }
 
-task debug(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
+tasks.register('debug', JavaExec) {
+    dependsOn classes
+    mainClass = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
@@ -29,24 +31,27 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
-task dist(type: Jar) {
-    from files(sourceSets.main.output.classesDirs)
-    from files(sourceSets.main.output.resourcesDir)
-    from configurations.compileClasspath
-	from configurations.runtimeClasspath
-
+tasks.register('dist', Jar) {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
 }
 
 // The run task added by the application plugin
 // is also of type JavaExec.
-tasks.withType(JavaExec) {
+//tasks.withType(JavaExec) {
     // Assign all Java system properties from
     // the command line to the JavaExec task.
-    systemProperties System.properties
-    systemProperties.remove("java.endorsed.dirs")
-}
+    //systemProperties System.properties
+    //systemProperties.remove("java.endorsed.dirs")
+//}
 
 dist.dependsOn classes
+
+eclipse.project.name = appName + "-server"
