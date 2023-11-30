@@ -12,8 +12,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 
-import com.qdu.pokerun.api.StepCounter;
-
 import java.util.Date;
 import java.util.Objects;
 

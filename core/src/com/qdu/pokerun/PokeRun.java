@@ -8,11 +8,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.qdu.pokerun.api.EmptyStepCounter;
-import com.qdu.pokerun.api.StepCounter;
+import com.qdu.pokerun.api.IStepCounter;
 import com.qdu.pokerun.entity.Player;
 import com.qdu.pokerun.preference.PokeRunPreference;
 import com.qdu.pokerun.screen.LoginScreen;
-import com.qdu.pokerun.screen.MainScreen;
 
 import java.util.Optional;
 
@@ -32,13 +31,13 @@ public class PokeRun extends Game {
 
     public static I18NBundle rb_default;
 
-    private StepCounter globalStepCounter;
+    private IStepCounter globalStepCounter;
 
     /**
      * 初始化所有字段
      * @param stepCounter
      */
-    public PokeRun(StepCounter stepCounter) {
+    public PokeRun(IStepCounter stepCounter) {
         this();
         this.globalStepCounter = stepCounter;
     }
@@ -63,7 +62,7 @@ public class PokeRun extends Game {
         return instance;
     }
 
-    public StepCounter getGlobalStepCounter() {
+    public IStepCounter getGlobalStepCounter() {
         return this.globalStepCounter;
     }
 

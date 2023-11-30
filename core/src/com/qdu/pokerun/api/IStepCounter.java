@@ -1,6 +1,6 @@
 package com.qdu.pokerun.api;
 
-public interface StepCounter {
+public interface IStepCounter {
     int getSteps();
 
 }

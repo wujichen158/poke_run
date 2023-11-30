@@ -1,6 +1,6 @@
 package com.qdu.pokerun.api;
 
-public class EmptyStepCounter implements StepCounter {
+public class EmptyStepCounter implements IStepCounter {
 
     @Override
     public int getSteps() {
