@@ -30,17 +30,12 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
 		super.onCreate(savedInstanceState);
 		requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-//		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
-//				!= PackageManager.PERMISSION_GRANTED) {
-//			Activit.requestPermissions(this, new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, REQUEST_CODE);
-//		}
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 //		config.useAccelerometer=true;
 //		config.useCompass=true;
-		System.out.println("Start service!!!!!");
-//		startForegroundService(new Intent(this, AndroidStepService.class));
-		startService(new Intent(this, AndroidStepService.class));
-		System.out.println("Start init!!!!!");
+
+		startForegroundService(new Intent(this, AndroidStepService.class));
+//		startService(new Intent(this, AndroidStepService.class));
 		initialize(new PokeRun(new AndroidStepCounter()), config);
 	}
 
@@ -57,8 +52,9 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 			Process pro = Runtime.getRuntime().exec("ping " + ipAddress);
 			BufferedReader buf = new BufferedReader(new InputStreamReader(
 					pro.getInputStream()));
-			while ((line = buf.readLine()) != null)
+			while ((line = buf.readLine()) != null) {
 				Log.i("Poke Run", "ping ping ping ping ping!!!!!"+line);
+			}
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}

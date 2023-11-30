@@ -40,7 +40,6 @@ public class AndroidStepService extends Service implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        System.out.println("step changed!!!!!" + event.values[0]);
         if (event.values[0] > Integer.MAX_VALUE) {
             if (BuildConfig.DEBUG) {
                 System.out.println("probably not a real value: " + event.values[0]);
@@ -88,7 +87,6 @@ public class AndroidStepService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        System.out.println("step on start cmd!!!!!");
         reRegisterSensor();
         registerBroadcastReceiver();
         if (!updateIfNecessary()) {
