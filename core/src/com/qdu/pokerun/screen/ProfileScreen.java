@@ -55,7 +55,7 @@ public class ProfileScreen extends MenuScreen {
         this.mainTable.add(this.emailContent);
 
         this.mainTable.row().padTop(64).padBottom(64);
-        this.stepContent = new Label(PokeRun.rb_default.format("label.step.description", 100), skin);
+        this.stepContent = new Label(PokeRun.rb_default.format("label.step.description", PokeRun.getInstance().getGlobalStepCounter().getSteps()), skin);
         this.stepContent.setColor(Color.BLACK);
         this.mainTable.add(this.stepContent);
 
@@ -82,7 +82,7 @@ public class ProfileScreen extends MenuScreen {
     @Override
     public void show() {
         super.show();
-        this.stepContent.setText(PokeRun.rb_default.format("label.step.description", 100));
+        this.stepContent.setText(PokeRun.rb_default.format("label.step.description", PokeRun.getInstance().getGlobalStepCounter().getSteps()));
         this.logoutButton.setText(PokeRun.rb_default.format("button.logout"));
         updateProfile();
     }

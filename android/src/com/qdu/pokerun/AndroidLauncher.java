@@ -34,8 +34,8 @@ public class AndroidLauncher extends AndroidApplication implements SensorEventLi
 //		config.useAccelerometer=true;
 //		config.useCompass=true;
 
-		startForegroundService(new Intent(this, AndroidStepService.class));
-//		startService(new Intent(this, AndroidStepService.class));
+//		startForegroundService(new Intent(this, AndroidStepService.class));
+		startService(new Intent(this, AndroidStepService.class));
 		initialize(new PokeRun(new AndroidStepCounter()), config);
 	}
 

@@ -153,7 +153,9 @@ public class AndroidStepService extends Service implements SensorEventListener {
         try {
             sm.unregisterListener(this);
         } catch (Exception e) {
-            if (BuildConfig.DEBUG) System.out.println(e);
+            if (BuildConfig.DEBUG) {
+                System.out.println(e);
+            }
             e.printStackTrace();
         }
 
