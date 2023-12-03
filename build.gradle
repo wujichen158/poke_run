@@ -21,7 +21,7 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
 
-    version = '1.0'
+    version = '2.0'
     ext {
         appName = "poke_run"
         gdxVersion = '1.12.1'
