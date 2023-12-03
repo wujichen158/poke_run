@@ -5,6 +5,6 @@ It'd be better if you run a Minecraft server and use [Pixelmon Bank](https://git
 
 Now support following platforms:
 
-* Android(With pedometer)
+* Android
 * Windows
-* iOS
+* iOS(No pedometer)
